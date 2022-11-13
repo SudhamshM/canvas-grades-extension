@@ -1,40 +1,70 @@
 'use strict';
-
-async function mainest()
-{
+let userID = ''
+async function mainest() {
 
     const resp = await fetch('https://uncc.instructure.com/api/v1/courses')
     // if request fails maybe because of not being logged in
-    if (!resp.ok)
-    {
+    if (!resp.ok) {
         swapDOM();
         return;
     }
     const data = Array.from(await resp.json());
     console.log(data);
 
+    userID = data[0]['enrollments'][0]['user_id'];
+    console.log(userID);
+
     // populate table with array data
-    data.forEach(course =>
+    let i = 0;
+    
+    data.forEach(course => {
+        const tr = document.createElement('tr')
+        const td1 = document.createElement('td');
+        const td2 = document.createElement('td');
+
+        getEnrollments(i, {td1, td2, tr});
+
+        if (!course['name'] || !course['uuid']) {
+            i++;
+            return;
+        }
+
+        const tableBase = document.querySelector('tbody');
+        tableBase.appendChild(tr);
+        i++;
+    })
+}
+
+async function getEnrollments(index, {td1, td2, tr}) {
+    let currentData = 0
+    const courseResp = await fetch(`https://uncc.instructure.com/api/v1/users/${userID}/enrollments`)
+    const parsed = Array.from(await courseResp.json());
+    parsed.forEach(async course=>
         {
-            const tr = document.createElement('tr')
-            const td1 = document.createElement('td');
-            const td2 = document.createElement('td');
-            if (!course['name'] || !course['uuid'])
+            if (!((String) (course['updated_at']).startsWith('2022-08')))
             {
                 return;
             }
-            td1.textContent = course['name'];
-            td2.textContent = course['uuid'];
-            tr.append(td1, td2);
-
-            const tableBase = document.querySelector('tbody');
-            tableBase.appendChild(tr);
-
+            currentData = parsed[index]['grades']['current_score'];
+            if (currentData == null)
+            {
+                return;
+            }
+            const courseID = parsed[index]['course_id'];
+            const nameHeaders = await fetch(`https://uncc.instructure.com/api/v1/courses/${courseID}`)
+            const parsedName = await nameHeaders.json();
+            console.log(parsedName)
+            if (parsedName['start_at'] == null)
+            {
+                td1.textContent = parsedName['name'];
+                td2.textContent = currentData + "%";
+                tr.append(td1, td2);
+                return;
+            }
         })
 }
 
-const swapDOM = () =>
-{
+const swapDOM = () => {
     document.querySelector('body').textContent = 'Make sure you are logged in to Canvas.'
     return;
 }
