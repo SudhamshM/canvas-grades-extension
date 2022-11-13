@@ -46,16 +46,20 @@
             border-bottom: 2px solid #009879;
         }
 
-        .styled-table tbody tr:hover
-        {
+        .styled-table tbody tr:hover {
             background-color: #afcec8;
+        }
+        .text-center
+        {
+            text-align: center;
         }
     </style>
 </head>
 
 <body style="width: 500px;">
-    <h1>See canvas grades below.</h1>
+    <h1 class="text-center">See your grades below.</h1>
     <!-- used css table style from https://dev.to/dcodeyt/creating-beautiful-html-tables-with-css-428l -->
+    <div class="content">
     <table class="styled-table">
         <thead>
             <tr>
@@ -64,9 +68,11 @@
             </tr>
         </thead>
         <tbody>
-
         </tbody>
+        <tr><td><h2 class="removable text-center">Getting grades...</h2></td>
+        </tr>
     </table>
+</div>
 </body>
 
 </html>

@@ -35,6 +35,7 @@ async function mainest() {
         tableBase.appendChild(tr);
         i++;
     })
+    document.querySelector('.removable').remove();
 }
 
 async function getEnrollments(index, {td1, td2, tr}, parsed) {
@@ -50,9 +51,22 @@ async function getEnrollments(index, {td1, td2, tr}, parsed) {
             {
                 return;
             }
+            if (currentData >= 90)
+            {
+                td2.style.backgroundColor = '#6ee080';            
+            }
+            else if (currentData <90 && currentData >= 80)
+            {
+                td2.style.backgroundColor = '#d4ed5e';
+            }
+            else if (currentData < 70 && currentData >= 60)
+            {
+                td2.style.backgroundColor = '#fce43a';
+            }
             const courseID = parsed[index]['course_id'];
             const nameHeaders = await fetch(`https://uncc.instructure.com/api/v1/courses/${courseID}`)
             const parsedName = await nameHeaders.json();
+            // get currently enrolled courses with null start time
             if (parsedName['start_at'] == null)
             {
                 td1.textContent = parsedName['name'];
@@ -64,7 +78,9 @@ async function getEnrollments(index, {td1, td2, tr}, parsed) {
 }
 
 const swapDOM = () => {
-    document.querySelector('body').textContent = 'Make sure you are logged in to Canvas.'
+    document.querySelector('.content').textContent = ''
+    document.querySelector('h1').textContent = 'Make sure you are logged in to Canvas.';
+    document.querySelector('body').style.width = '200px';
     return;
 }
 
