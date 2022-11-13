@@ -42,10 +42,11 @@ async function getEnrollments(index, {td1, td2, tr}, parsed) {
     let currentData = 0
     parsed.forEach(async course=>
         {
-            if (!((String) (course['updated_at']).startsWith('2022-08')))
-            {
-                return;
-            }
+            // if (!((String) (course['updated_at']).startsWith('2022-08')))
+            // {
+            //     return;
+            // }
+            console.log(course)
             currentData = parsed[index]['grades']['current_score'];
             if (currentData == null)
             {
@@ -69,7 +70,7 @@ async function getEnrollments(index, {td1, td2, tr}, parsed) {
             // get currently enrolled courses with null start time
             if (parsedName['start_at'] == null)
             {
-                td1.textContent = parsedName['name'];
+                td1.textContent = parsedName['name'].substring(17);
                 td2.textContent = currentData + "%";
                 tr.append(td1, td2);
                 return;
