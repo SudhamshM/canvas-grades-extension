@@ -1,0 +1,18 @@
+{
+    "name": "Canvas Anywhere",
+    "version": "0.1.0",
+    "description": "See your grades from Canvas",
+    "manifest_version": 3,
+
+    "permissions": ["tabs"],
+    "host_permissions": ["https://uncc.instructure.com/api/v1/courses"],
+    "action": {
+      "default_icon": {
+        "16": "icon-128.png",
+        "24": "icon-128.png",
+        "32": "icon-128.png"
+      },
+      "default_title": "Canvas Anywhere",
+      "default_popup": "popup.html"
+    }
+}
