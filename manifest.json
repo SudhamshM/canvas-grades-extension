@@ -1,6 +1,6 @@
 {
     "name": "Canvas Anywhere",
-    "version": "0.1.0",
+    "version": "0.1.5",
     "description": "See your grades from Canvas",
     "manifest_version": 3,
     "host_permissions": ["https://uncc.instructure.com/api/v1/courses"],
