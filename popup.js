@@ -23,13 +23,19 @@ async function mainest() {
         const tr = document.createElement('tr')
         const td1 = document.createElement('td');
         const td2 = document.createElement('td');
-
-        getEnrollments(i, {td1, td2, tr}, parsed);
-
+        let dataTransfer = {
+            i,
+            td1,
+            td2,
+            tr,
+            parsed
+        }
+        
         if (!course['name'] || !course['uuid']) {
             i++;
             return;
         }
+        getEnrollments(dataTransfer);
 
         const tableBase = document.querySelector('tbody');
         tableBase.appendChild(tr);
@@ -38,41 +44,45 @@ async function mainest() {
     document.querySelector('.removable').remove();
 }
 
-async function getEnrollments(index, {td1, td2, tr}, parsed) {
+async function getEnrollments(dataTransfer) {
     let currentData = 0
-    parsed.forEach(async course=>
+    dataTransfer.parsed.forEach(async course=>
         {
             // if (!((String) (course['updated_at']).startsWith('2022-08')))
             // {
             //     return;
             // }
-            console.log(course)
-            currentData = parsed[index]['grades']['current_score'];
+            let index = dataTransfer.i;
+            let parsedInner = dataTransfer.parsed;
+            let td1Inner= dataTransfer.td1;
+            let td2Inner = dataTransfer.td2;
+            let trInner = dataTransfer.tr;
+            currentData = parsedInner[index]['grades']['current_score'];
             if (currentData == null)
             {
                 return;
             }
             if (currentData >= 90)
             {
-                td2.style.backgroundColor = '#6ee080';            
+                td2Inner.style.backgroundColor = '#6ee080';            
             }
             else if (currentData <90 && currentData >= 80)
             {
-                td2.style.backgroundColor = '#d4ed5e';
+                td2Inner.style.backgroundColor = '#d4ed5e';
             }
             else if (currentData < 70 && currentData >= 60)
             {
-                td2.style.backgroundColor = '#fce43a';
+                td2Inner.style.backgroundColor = '#fce43a';
             }
-            const courseID = parsed[index]['course_id'];
+            const courseID = parsedInner[index]['course_id'];
             const nameHeaders = await fetch(`https://uncc.instructure.com/api/v1/courses/${courseID}`)
             const parsedName = await nameHeaders.json();
             // get currently enrolled courses with null start time
             if (parsedName['start_at'] == null)
             {
-                td1.textContent = parsedName['name'].substring(17);
-                td2.textContent = currentData + "%";
-                tr.append(td1, td2);
+                td1Inner.textContent = parsedName['name'].substring(17);
+                td2Inner.textContent = currentData + "%";
+                trInner.append(td1Inner, td2Inner);
                 return;
             }
         })
